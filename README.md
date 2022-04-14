@@ -1,2 +1,2 @@
-# recipeproject
+# recipe-app
 practice springboot
