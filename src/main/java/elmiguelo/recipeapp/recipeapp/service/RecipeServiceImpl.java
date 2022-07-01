@@ -20,7 +20,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Set<Recipe> getRecipe() {
+    public Set<Recipe> getRecipes() {
         log.debug("I'm in de service");
         Set<Recipe> recipeSet = new HashSet<>();
         recipeRepository.findAll().forEach(recipeSet::add);
