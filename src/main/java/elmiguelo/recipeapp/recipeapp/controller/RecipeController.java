@@ -17,13 +17,6 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping
-    public String showRecipes(Model model){
-        log.debug("retrieve recipes");
-        model.addAttribute("recipes",recipeService.getRecipes());
-        return "recipe/recipe";
-    }
-
     @GetMapping("show/{id}")
     public String showById(@PathVariable String id, Model model){
         log.debug("retrieve recipe by id");
