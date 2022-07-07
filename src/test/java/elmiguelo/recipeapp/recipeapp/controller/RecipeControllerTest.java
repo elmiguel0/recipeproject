@@ -18,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class RecipeControllerTest {
 
@@ -45,24 +44,40 @@ class RecipeControllerTest {
     }
 
     @Test
-    void showRecipes() {
+    void testGetRecipe() throws Exception {
         //given
-        Set<Recipe> recipes = new HashSet<>();
-        recipes.add(new Recipe());
-        recipes.add(new Recipe());
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
 
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        when(recipeService.findById(anyLong())).thenReturn(recipe);
 
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
-
-        //when
-        String viewName = recipeController.showRecipes(model);
-
-        //then
-        assertEquals("recipe/recipe",viewName);
-        verify(recipeService,times(1)).getRecipes();
-        verify(model,times(1)).addAttribute(eq("recipes"),argumentCaptor.capture());
-        Set<Recipe> setController = argumentCaptor.getValue();
-        assertEquals(2,setController.size());
+        mockMvc.perform(get("/recipe/show/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/show"))
+                .andExpect(model().attributeExists("recipe"));
     }
+    /* this is not use anymore
+      @Test
+          void showRecipes() {
+              //given
+              Set<Recipe> recipes = new HashSet<>();
+              recipes.add(new Recipe());
+              recipes.add(new Recipe());
+
+              when(recipeService.getRecipes()).thenReturn(recipes);
+
+              ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+
+              //when
+              String viewName = recipeController.showRecipes(model);
+
+              //then
+              assertEquals("recipe/recipe",viewName);
+              verify(recipeService,times(1)).getRecipes();
+              verify(model,times(1)).addAttribute(eq("recipes"),argumentCaptor.capture());
+              Set<Recipe> setController = argumentCaptor.getValue();
+              assertEquals(2,setController.size());
+          }
+     */
 }
